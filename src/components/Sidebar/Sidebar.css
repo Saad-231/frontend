@@ -326,22 +326,3 @@
   justify-content: center;
   color: var(--color-text-muted);
 }
-@media (max-width: 768px) {
-  .menu-btn {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 999;
-  }
-  .chat-input-wrapper {
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    z-index: 999;
-  }
-  .main-chat-area {
-    padding-bottom: 90px;
-  }
-}
