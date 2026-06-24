@@ -326,3 +326,57 @@
   justify-content: center;
   color: var(--color-text-muted);
 }
+
+/* ==========================================================================
+   यहाँ से नीचे आपका नया मोबाइल रेस्पॉन्सिव कोड शुरू होता ہے (Bina puraane code ko chhede)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* 1. موبایل پر سائیڈ بار کو بائیں طرف چھپانے کے لیے */
+  .sidebar {
+    position: fixed !important;
+    top: 0;
+    left: -100%; /* سکرین سے باہر */
+    width: 280px !important;
+    min-width: 280px !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
+    transition: left 0.3s ease-out !important;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+  }
+
+  /* جب سائیڈ بار اوپن ہوگی */
+  .sidebar.open {
+    left: 0 !important;
+  }
+
+  /* 2. مینو بٹن (☰) کو موبائل پر ہمیشہ اوپر فکس دکھانے کے لیے */
+  .menu-btn {
+    position: fixed !important;
+    top: 12px !important;
+    left: 12px !important;
+    z-index: 999 !important;
+    display: block !important;
+  }
+
+  /* 3. ان پٹ باکس (میسج بار) کو موبائل سکرین پر بالکل نیچے فٹ کرنے کے لیے */
+  .chat-input-wrapper,
+  [class*="input-container"],
+  [class*="chat-input"] {
+    position: fixed !important;
+    bottom: 12px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 92% !important;
+    z-index: 999 !important;
+  }
+
+  /* 4. چیٹ ونڈو کے نیچے فکسڈ پیڈنگ تاکہ آخری میسج ان پٹ کے پیچھے نہ چھپے */
+  .main-chat-area,
+  [class*="chat-area"],
+  [class*="main-chat"] {
+    padding-bottom: 95px !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+  }
+}
