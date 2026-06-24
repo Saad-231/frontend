@@ -13,6 +13,9 @@ export default function Message({ message }) {
 
   const isSpeaking = speakingId === message.id;
   const canReadAloud = !isUser && !isStreaming && message.type === 'text' && message.content;
+  
+  // 🟢 چیک کریں کہ ٹیکسٹ اردو یا ہندی (عربی رسم الخط) میں تو نہیں ہے
+  const isUrduOrHindi = /[\u0600-\u06FF\u0900-\u097F]/.test(message.content || '');
 
   const handleDownloadImage = (url, prompt) => {
     const link = document.createElement('a');
@@ -77,7 +80,8 @@ export default function Message({ message }) {
         {canReadAloud && ttsSupported && (
           <button
             className={`message__speak-btn ${isSpeaking ? 'message__speak-btn--active' : ''}`}
-            onClick={() => speak(message.id, message.content)}
+            // 🟢 یہاں ہم نے زبان کی کنڈیشن پاس کر دی ہے
+            onClick={() => speak(message.id, message.content, isUrduOrHindi ? 'ur-PK' : 'en-US')}
             title={isSpeaking ? 'Stop reading aloud' : 'Read this message aloud'}
             aria-label={isSpeaking ? 'Stop reading aloud' : 'Read message aloud'}
           >
