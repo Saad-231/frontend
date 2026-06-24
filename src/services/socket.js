@@ -8,7 +8,7 @@ let socket = null;
  */
 export function getSocket() {
   if (!socket) {
-    socket = io('/', {
+    socket = io('https://backend-ivory-nine-55.vercel.app/', {
       transports: ['websocket', 'polling'],
       autoConnect: true,
     });
