@@ -1,6 +1,6 @@
 import { getOrCreateUserId } from '../utils/userId';
 
-const BASE = 'https://backend-ivory-nine-55.vercel.app';
+const BASE = 'https://backend-ivory-nine-55.vercel.app/';
 
 function headers(extra = {}) {
   return {
