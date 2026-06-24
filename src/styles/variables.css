@@ -1,0 +1,105 @@
+/* ==========================================================================
+   NovaScribe.AI — Design Tokens
+   Concept: "ink & signal" — a digital scribe's desk at night.
+   Deep ink-charcoal surfaces, a single blue-violet "nova" accent that
+   matches the app favicon exactly, used consistently everywhere
+   (buttons, highlights, active states) for a cohesive look.
+   ========================================================================== */
+
+:root {
+  /* ---- Core palette -------------------------------------------------- */
+  --ink-950: #0b0c10;   /* app shell background */
+  --ink-900: #121319;   /* sidebar background */
+  --ink-850: #161821;   /* raised panels */
+  --ink-800: #1c1e29;   /* chat surface */
+  --ink-750: #20222e;   /* hover surface */
+  --ink-700: #2a2d3a;   /* borders / dividers */
+  --ink-600: #3a3e4f;   /* stronger borders */
+  --ink-400: #6b7080;   /* muted icons */
+  --ink-300: #8a8fa3;   /* secondary text */
+  --ink-100: #e7e8ee;   /* primary text */
+  --ink-white: #f7f7fb;
+
+  /* ---- Nova accent (signature gradient) ------------------------------
+     Matches the app favicon exactly: blue-violet (#7C5CFF) blending
+     to a cooler blue. Used as the one consistent accent color across
+     every button, highlight, and active state in the app. */
+  --nova-violet: #7c5cff;
+  --nova-amber: #7c5cff;
+  --nova-teal: #7c5cff;
+  --nova-gradient: linear-gradient(135deg, #7c5cff 0%, #6a6bf0 100%);
+  --nova-gradient-soft: linear-gradient(135deg, rgba(124, 92, 255, 0.16) 0%, rgba(106, 107, 240, 0.12) 100%);
+
+  /* ---- Semantic colors ------------------------------------------------ */
+  --color-bg: var(--ink-950);
+  --color-sidebar-bg: var(--ink-900);
+  --color-surface: var(--ink-850);
+  --color-surface-raised: var(--ink-800);
+  --color-surface-hover: var(--ink-750);
+  --color-border: var(--ink-700);
+  --color-border-strong: var(--ink-600);
+  --color-text-primary: var(--ink-100);
+  --color-text-secondary: var(--ink-300);
+  --color-text-muted: var(--ink-400);
+  --color-accent: var(--nova-violet);
+  --color-accent-soft: rgba(124, 92, 255, 0.16);
+  --color-danger: #ff6b6b;
+  --color-danger-soft: rgba(255, 107, 107, 0.14);
+  --color-success: #4ade80;
+  --color-warning: var(--nova-amber);
+
+  /* ---- Typography ------------------------------------------------------
+     Display: "Fraunces"-style editorial serif for brand moments (logo,
+     modal headlines) — evokes the "scribe" in NovaScribe.
+     UI: Inter-style humanist sans for everything functional.
+     Mono: for the live caption/transcription bar — feels like a signal
+     readout, reinforcing the speech-to-text feature. */
+  --font-display: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-base: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.625rem;
+  --fs-2xl: 2.1rem;
+
+  /* ---- Spacing & radius ------------------------------------------------ */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 14px;
+  --space-lg: 20px;
+  --space-xl: 32px;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  /* ---- Motion ------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+
+  /* ---- Elevation ------------------------------------------------------ */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.38);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 0 1px rgba(124, 92, 255, 0.28), 0 8px 30px rgba(91, 140, 224, 0.18);
+
+  /* ---- Layout ----------------------------------------------------------*/
+  --sidebar-width: 280px;
+  --sidebar-width-collapsed: 72px;
+  --topbar-height: 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+  }
+}

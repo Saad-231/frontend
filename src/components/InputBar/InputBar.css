@@ -1,0 +1,238 @@
+.input-bar-wrap {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg) var(--space-lg);
+  flex-shrink: 0;
+}
+
+.input-bar {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm) var(--space-sm) 6px;
+  box-shadow: var(--shadow-md);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.input-bar:focus-within {
+  border-color: #7c5cff;
+}
+
+.input-bar__textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: var(--space-sm) var(--space-sm) 2px;
+  font-size: var(--fs-base);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  max-height: 180px;
+  font-family: inherit;
+}
+
+.input-bar__textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Attachment preview — shown inside the input bar above the textarea
+   when a file/photo is staged, so the user can actually see what
+   they're about to send (with a thumbnail for images). */
+.input-bar__attachment-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 6px var(--space-sm);
+  margin: 2px 6px 6px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  animation: slideUp var(--dur-fast) var(--ease-out);
+}
+
+.input-bar__attachment-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+}
+
+.input-bar__attachment-doc {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.input-bar__attachment-name {
+  flex: 1;
+  font-size: var(--fs-xs);
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.input-bar__attachment-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.input-bar__attachment-remove:hover {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.input-bar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px 4px;
+}
+
+.input-bar__icons-left,
+.input-bar__icons-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.input-bar__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  position: relative;
+}
+
+.input-bar__icon-btn:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+.input-bar__icon-btn:disabled {
+  cursor: default;
+}
+
+.input-bar__icon-btn--voice:hover {
+  color: var(--nova-violet);
+}
+
+.input-bar__icon-btn--livechat:hover {
+  color: var(--nova-violet);
+}
+
+/* Send button */
+.input-bar__send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--nova-gradient);
+  color: var(--ink-950);
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  animation: slideUp var(--dur-fast) var(--ease-out);
+}
+
+.input-bar__send-btn:hover {
+  transform: scale(1.06);
+  box-shadow: var(--shadow-glow);
+}
+
+.input-bar__send-btn:active {
+  transform: scale(0.96);
+}
+
+/* Stop button (while streaming) */
+.input-bar__stop-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-primary);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.input-bar__stop-btn:hover {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+/* Countdown ring on the gallery/image icon while generating */
+.input-bar__icon-btn--gallery {
+  overflow: visible;
+}
+
+.input-bar__countdown {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-bar__countdown-ring {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+}
+
+.input-bar__countdown-track {
+  fill: none;
+  stroke: var(--color-border-strong);
+  stroke-width: 2.5;
+}
+
+.input-bar__countdown-progress {
+  fill: none;
+  stroke: var(--nova-amber);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.input-bar__countdown-number {
+  position: relative;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--nova-amber);
+}
+
+.input-bar__hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  margin: var(--space-sm) 0 0;
+}
