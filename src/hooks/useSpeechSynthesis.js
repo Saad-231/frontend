@@ -16,8 +16,9 @@ export function useSpeechSynthesis() {
     setSpeakingId(null);
   }, [isSupported]);
 
+  // 🟢 یہاں 'lang' کا پیرامیٹر ایڈ کیا ہے جو آپ کی فکسڈ لینگویج لائے گا
   const speak = useCallback(
-    (id, text) => {
+    (id, text, lang = 'en-US') => {
       if (!isSupported || !text) return;
 
       // If this same message is already playing, stop it (toggle off).
@@ -29,6 +30,19 @@ export function useSpeechSynthesis() {
       window.speechSynthesis.cancel();
 
       const utterance = new window.SpeechSynthesisUtterance(text);
+      
+      // 🟢 زبان سیٹ کر دی جو باہر سے آئے گی (جیسے 'ur-PK')
+      utterance.lang = lang;
+      
+      // 🟢 اگر سسٹم میں اردو یا ہندی کی کوئی مخصوص آواز موجود ہو تو وہ اٹو-سلیکٹ ہو جائے
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        const voices = window.speechSynthesis.getVoices();
+        const matchingVoice = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+        if (matchingVoice) {
+          utterance.voice = matchingVoice;
+        }
+      }
+
       utterance.rate = 1;
       utterance.pitch = 1;
       utterance.onend = () => setSpeakingId(null);
