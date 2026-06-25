@@ -48,16 +48,15 @@ export default function Sidebar() {
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
 
-  // آپ کے اپنے بنائے ہوئے API سروس ماڈیول سے سیکیور ڈیٹا لوڈ کرنے کا لاجک
+  // بالکل صاف اور سیکیور ٹوکن بیسڈ فیچ لاجک (بریکٹ فکسڈ)
   useEffect(() => {
     async function loadSecureHistory() {
       try {
-        // اگر آپ کے api.js میں ہسٹری کا کوئی فنکشن ہے تو اسے ہٹ ماریں، ورنہ لائیو پروٹیکٹڈ ہٹ
+        const token = localStorage.getItem('token') || '';
         const response = await fetch("https://backend-ivory-nine-55.vercel.app/api/history/chats", {
           headers: {
             'Content-Type': 'application/json',
-            // اگر لوکل سٹوریج میں ٹوکن ہے تو وہ خود بخود چلا جائے گا
-            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+            'Authorization': token ? `Bearer ${token}` : ''
           }
         });
         if (response.ok) {
@@ -73,13 +72,13 @@ export default function Sidebar() {
     }
 
     loadSecureHistory();
-  </script>
+  }, []); // यहाँ स्क्रिप्ट टैग हटा कर ब्रैकेट बिल्कुल परफेक्ट क्लोज कर दिया है
 
   useEffect(() => {
     if (context?.chats && context.chats.length !== localChats.length) {
       setLocalChats(context.chats);
     }
-  }, [context?.chats]);
+  }, [context?.chats, localChats.length]);
 
   const filteredChats = useMemo(() => {
     const safeChats = localChats || [];
