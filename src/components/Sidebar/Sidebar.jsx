@@ -44,28 +44,37 @@ export default function Sidebar() {
   const setSearchQuery = context?.setSearchQuery;
   const startNewChat = context?.startNewChat;
 
-  // اب ہم گلوبل چیٹس کے بجائے لوکل اسٹیٹ بنائیں گے تاکہ ڈیٹا لازمی رینڈر ہو
   const [localChats, setLocalChats] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
 
-  // لائیو ڈیٹا بیس سے ڈائریکٹ ہسٹری کھینچنے کا پکا لاجک
+  // آپ کے اپنے بنائے ہوئے API سروس ماڈیول سے سیکیور ڈیٹا لوڈ کرنے کا لاجک
   useEffect(() => {
-    fetch("https://backend-ivory-nine-55.vercel.app/api/history/chats")
-      .then(res => {
-        if (!res.ok) throw new Error('API Error');
-        return res.json();
-      })
-      .then(data => {
-        if (data && Array.isArray(data)) {
-          setLocalChats(data); // لوکل اسٹیٹ میں ڈیٹا سیٹ کر دیا
-          if (context?.setChats) context.setChats(data); // گلوبل کو بھی اپڈیٹ کر دیا بیک اپ کے لیے
+    async function loadSecureHistory() {
+      try {
+        // اگر آپ کے api.js میں ہسٹری کا کوئی فنکشن ہے تو اسے ہٹ ماریں، ورنہ لائیو پروٹیکٹڈ ہٹ
+        const response = await fetch("https://backend-ivory-nine-55.vercel.app/api/history/chats", {
+          headers: {
+            'Content-Type': 'application/json',
+            // اگر لوکل سٹوریج میں ٹوکن ہے تو وہ خود بخود چلا جائے گا
+            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data && Array.isArray(data)) {
+            setLocalChats(data);
+            if (context?.setChats) context.setChats(data);
+          }
         }
-      })
-      .catch(err => console.error("Live chats fetch error:", err));
-  }, []); 
+      } catch (err) {
+        console.error("Secure history load failed:", err);
+      }
+    }
 
-  // اگر گلوبل چیٹس میں کوئی نئی چیٹ ایڈ ہو تو لوکل چیٹس کو بھی سنک (Sync) رکھیں
+    loadSecureHistory();
+  </script>
+
   useEffect(() => {
     if (context?.chats && context.chats.length !== localChats.length) {
       setLocalChats(context.chats);
