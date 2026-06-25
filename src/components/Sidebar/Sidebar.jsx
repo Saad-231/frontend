@@ -48,31 +48,48 @@ export default function Sidebar() {
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
 
-  // بالکل صاف اور سیکیور ٹوکن بیسڈ فیچ لاجک (بریکٹ فکسڈ)
+  // لائیو مانیٹرنگ اور ڈیبگنگ لاجک
   useEffect(() => {
     async function loadSecureHistory() {
       try {
         const token = localStorage.getItem('token') || '';
+        
+        // عارضی الرٹ دیکھنے کے لیے کہ ٹوکن جا بھی رہا ہے یا نہیں
+        console.log("Current Token found:", token);
+
         const response = await fetch("https://backend-ivory-nine-55.vercel.app/api/history/chats", {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': token ? `Bearer ${token}` : ''
           }
         });
-        if (response.ok) {
-          const data = await response.json();
-          if (data && Array.isArray(data)) {
+
+        if (!response.ok) {
+          alert(`Backend Error Status: ${response.status}`);
+          return;
+        }
+
+        const data = await response.json();
+        
+        // اگر ڈیٹا خالی آ رہا ہے تو اسکرین پر الرٹ آئے گا
+        if (data && Array.isArray(data)) {
+          if (data.length === 0) {
+            alert("Backend connected successfully! But Database returned 0 chats (Empty Array).");
+          } else {
             setLocalChats(data);
             if (context?.setChats) context.setChats(data);
           }
+        } else {
+          alert("Response format is not an array!");
         }
+
       } catch (err) {
-        console.error("Secure history load failed:", err);
+        alert(`Network/CORS Connection Failed: ${err.message}`);
       }
     }
 
     loadSecureHistory();
-  }, []); // यहाँ स्क्रिप्ट टैग हटा कर ब्रैकेट बिल्कुल परफेक्ट क्लोज कर दिया है
+  }, []);
 
   useEffect(() => {
     if (context?.chats && context.chats.length !== localChats.length) {
@@ -135,12 +152,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar__top">
-        <button
-          className="sidebar__icon-btn"
-          onClick={handleToggleSidebar}
-          title="Collapse menu"
-          aria-label="Collapse menu"
-        >
+        <button className="sidebar__icon-btn" onClick={handleToggleSidebar} title="Collapse menu" aria-label="Collapse menu">
           <MenuIcon />
         </button>
         <div className="sidebar__brand">
@@ -167,10 +179,7 @@ export default function Sidebar() {
       </button>
 
       <div className="sidebar__section">
-        <button
-          className="sidebar__section-header"
-          onClick={() => setMyStuffExpanded((v) => !v)}
-        >
+        <button className="sidebar__section-header" onClick={() => setMyStuffExpanded((v) => !v)}>
           <SparkleStackIcon size={16} />
           <span>My Stuff</span>
           <span className="sidebar__count">{(creations || []).length}</span>
@@ -191,12 +200,7 @@ export default function Sidebar() {
                 tabIndex={item.chatId ? 0 : undefined}
               >
                 <img src={item.url} alt={item.prompt} loading="lazy" />
-                <button
-                  className="sidebar__creation-download"
-                  onClick={(e) => handleDownloadImage(e, item)}
-                  aria-label="Download image"
-                  title="Download image"
-                >
+                <button className="sidebar__creation-download" onClick={(e) => handleDownloadImage(e, item)} aria-label="Download image" title="Download image">
                   <DownloadIcon size={14} />
                 </button>
               </div>
@@ -218,20 +222,12 @@ export default function Sidebar() {
             {items.map((chat) => (
               <button
                 key={chat.id}
-                className={`sidebar__history-item ${
-                  chat.id === activeChatId ? 'sidebar__history-item--active' : ''
-                }`}
+                className={`sidebar__history-item ${chat.id === activeChatId ? 'sidebar__history-item--active' : ''}`}
                 onClick={() => setActiveChatId ? setActiveChatId(chat.id) : null}
               >
                 <ChatBubbleIcon size={15} className="sidebar__history-item-icon" />
                 <span className="sidebar__history-item-title">{chat.title}</span>
-                <span
-                  className="sidebar__history-item-delete"
-                  onClick={(e) => handleDeleteChat(e, chat.id)}
-                  role="button"
-                  tabIndex={-1}
-                  aria-label="Delete chat"
-                >
+                <span className="sidebar__history-item-delete" onClick={(e) => handleDeleteChat(e, chat.id)} role="button" tabIndex={-1} aria-label="Delete chat">
                   <TrashIcon size={14} />
                 </span>
               </button>
