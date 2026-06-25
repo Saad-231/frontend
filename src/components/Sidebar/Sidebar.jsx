@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect } from 'react'; // यहाँ useEffect ऐड कर दिया है
-import axios from 'axios'; // ڈائریکٹ ہٹ مارنے کے لیے ایکسیوس امپورٹ کیا
+import React, { useMemo, useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   MenuIcon,
   SearchIcon,
@@ -19,8 +19,9 @@ function groupChatsByDate(chats) {
   const now = new Date();
   const oneDay = 24 * 60 * 60 * 1000;
 
-  chats.forEach((chat) => {
-    if (!chat || !chat.updatedAt) return; // پروٹیکشن ایڈ کی تاکہ ان ڈیفائنڈ ڈیٹ کریش نہ کرے
+  const safeChats = chats || [];
+  safeChats.forEach((chat) => {
+    if (!chat || !chat.updatedAt) return;
     const updated = new Date(chat.updatedAt);
     const diffDays = Math.floor((now - updated) / oneDay);
 
@@ -34,45 +35,38 @@ function groupChatsByDate(chats) {
 }
 
 export default function Sidebar() {
-  const {
-    sidebarOpen,
-    setSidebarOpen,
-    chats,
-    setChats,
-    activeChatId,
-    setActiveChatId,
-    creations,
-    setCreations, // کانٹیکسٹ سے اس کو نکالا تاکہ امیجز بھی اپڈیٹ ہوں
-    searchQuery,
-    setSearchQuery,
-    startNewChat,
-  } = useAppContext();
+  // ایپ کانٹیکسٹ سے صرف وہی چیزیں نکالیں جو وہاں 100% موجود ہیں تاکہ بلڈ ایرر نہ آئے
+  const context = useAppContext();
+  const sidebarOpen = context?.sidebarOpen;
+  const setSidebarOpen = context?.setSidebarOpen;
+  const chats = context?.chats || [];
+  const setChats = context?.setChats;
+  const activeChatId = context?.activeChatId;
+  const setActiveChatId = context?.setActiveChatId;
+  const creations = context?.creations || [];
+  const searchQuery = context?.searchQuery || '';
+  const setSearchQuery = context?.setSearchQuery;
+  const startNewChat = context?.startNewChat;
 
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
 
-  // ==========================================================================
-  // یہ رہا وہ جادوئی کوڈ جو لائیو سائٹ پر بنا ساکٹ کے ڈیٹا کھینچ کر لائے گا
-  // ==========================================================================
+  // لائیو بیک اینڈ سے ڈیٹا فیچ کرنے کے لیے بالکل سیف اپروچ
   useEffect(() => {
-    // 1. چیٹس لوڈ کرنے کے لیے ڈائریکٹ لائیو ہٹ
+    if (!setChats) return;
+
+    // چیٹس لوڈ کرنے کے لیے لائیو ہٹ
     axios.get("https://backend-ivory-nine-55.vercel.app/api/history/chats")
       .then(res => {
-        if (res.data) setChats(res.data);
+        if (res.data && typeof setChats === 'function') {
+          setChats(res.data);
+        }
       })
       .catch(err => console.error("Live chats fetch error:", err));
-
-    // 2. مائی اسٹف کی امیجز لوڈ کرنے کے لیے ڈائریکٹ لائیو ہٹ
-    axios.get("https://backend-ivory-nine-55.vercel.app/api/history/creations")
-      .then(res => {
-        if (res.data && setCreations) setCreations(res.data);
-      })
-      .catch(err => console.error("Live creations fetch error:", err));
-  }, []); // یہ بریکٹ لازمی ہیں تاکہ پیج لوڈ ہوتے ہی صرف ایک بار چلے
-  // ==========================================================================
+  }, [setChats]); 
 
   const filteredChats = useMemo(() => {
-    const safeChats = chats || []; // سیفٹی چیک
+    const safeChats = chats || [];
     if (!searchQuery.trim()) return safeChats;
     const q = searchQuery.toLowerCase();
     return safeChats.filter((c) => c && c.title && c.title.toLowerCase().includes(q));
@@ -81,16 +75,18 @@ export default function Sidebar() {
   const groupedChats = useMemo(() => groupChatsByDate(filteredChats), [filteredChats]);
 
   const handleToggleSidebar = () => {
-    setSidebarOpen((open) => !open);
-    if (!sidebarOpen) setShowSearch(false);
+    if (setSidebarOpen) {
+      setSidebarOpen((open) => !open);
+      if (!sidebarOpen) setShowSearch(false);
+    }
   };
 
   const handleDeleteChat = async (e, chatId) => {
     e.stopPropagation();
     try {
       await api.deleteChatSession(chatId);
-      setChats((prev) => prev.filter((c) => c.id !== chatId));
-      if (activeChatId === chatId) startNewChat();
+      if (setChats) setChats((prev) => prev.filter((c) => c.id !== chatId));
+      if (activeChatId === chatId && startNewChat) startNewChat();
     } catch (err) {
       console.error('Failed to delete chat', err);
     }
@@ -144,7 +140,7 @@ export default function Sidebar() {
           placeholder="Search chats..."
           value={searchQuery}
           onFocus={() => setShowSearch(true)}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => setSearchQuery ? setSearchQuery(e.target.value) : null}
           className="sidebar__search-input"
         />
       </div>
@@ -174,7 +170,7 @@ export default function Sidebar() {
                 key={item.id}
                 className="sidebar__creation-thumb"
                 title={item.prompt}
-                onClick={() => item.chatId && setActiveChatId(item.chatId)}
+                onClick={() => item.chatId && setActiveChatId && setActiveChatId(item.chatId)}
                 role={item.chatId ? 'button' : undefined}
                 tabIndex={item.chatId ? 0 : undefined}
               >
@@ -209,7 +205,7 @@ export default function Sidebar() {
                 className={`sidebar__history-item ${
                   chat.id === activeChatId ? 'sidebar__history-item--active' : ''
                 }`}
-                onClick={() => setActiveChatId(chat.id)}
+                onClick={() => setActiveChatId ? setActiveChatId(chat.id) : null}
               >
                 <ChatBubbleIcon size={15} className="sidebar__history-item-icon" />
                 <span className="sidebar__history-item-title">{chat.title}</span>
@@ -239,4 +235,3 @@ export default function Sidebar() {
     </aside>
   );
 }
-  
