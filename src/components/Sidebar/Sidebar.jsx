@@ -37,8 +37,6 @@ export default function Sidebar() {
   const context = useAppContext();
   const sidebarOpen = context?.sidebarOpen;
   const setSidebarOpen = context?.setSidebarOpen;
-  const chats = context?.chats || [];
-  const setChats = context?.setChats;
   const activeChatId = context?.activeChatId;
   const setActiveChatId = context?.setActiveChatId;
   const creations = context?.creations || [];
@@ -46,30 +44,40 @@ export default function Sidebar() {
   const setSearchQuery = context?.setSearchQuery;
   const startNewChat = context?.startNewChat;
 
+  // اب ہم گلوبل چیٹس کے بجائے لوکل اسٹیٹ بنائیں گے تاکہ ڈیٹا لازمی رینڈر ہو
+  const [localChats, setLocalChats] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
 
-  // کسی تھرڈ پارٹی لائبریری (Axios) کے بغیر سٹریٹ فارورڈ نیٹو فیچ کال
+  // لائیو ڈیٹا بیس سے ڈائریکٹ ہسٹری کھینچنے کا پکا لاجک
   useEffect(() => {
-    if (!setChats || typeof setChats !== 'function') return;
-
     fetch("https://backend-ivory-nine-55.vercel.app/api/history/chats")
       .then(res => {
-        if (res.ok) return res.json();
-        throw new Error('Network response was not ok');
+        if (!res.ok) throw new Error('API Error');
+        return res.json();
       })
       .then(data => {
-        if (data) setChats(data);
+        if (data && Array.isArray(data)) {
+          setLocalChats(data); // لوکل اسٹیٹ میں ڈیٹا سیٹ کر دیا
+          if (context?.setChats) context.setChats(data); // گلوبل کو بھی اپڈیٹ کر دیا بیک اپ کے لیے
+        }
       })
       .catch(err => console.error("Live chats fetch error:", err));
-  }, [setChats]); 
+  }, []); 
+
+  // اگر گلوبل چیٹس میں کوئی نئی چیٹ ایڈ ہو تو لوکل چیٹس کو بھی سنک (Sync) رکھیں
+  useEffect(() => {
+    if (context?.chats && context.chats.length !== localChats.length) {
+      setLocalChats(context.chats);
+    }
+  }, [context?.chats]);
 
   const filteredChats = useMemo(() => {
-    const safeChats = chats || [];
+    const safeChats = localChats || [];
     if (!searchQuery.trim()) return safeChats;
     const q = searchQuery.toLowerCase();
     return safeChats.filter((c) => c && c.title && c.title.toLowerCase().includes(q));
-  }, [chats, searchQuery]);
+  }, [localChats, searchQuery]);
 
   const groupedChats = useMemo(() => groupChatsByDate(filteredChats), [filteredChats]);
 
@@ -84,7 +92,8 @@ export default function Sidebar() {
     e.stopPropagation();
     try {
       await api.deleteChatSession(chatId);
-      if (setChats) setChats((prev) => prev.filter((c) => c.id !== chatId));
+      setLocalChats((prev) => prev.filter((c) => c.id !== chatId));
+      if (context?.setChats) context.setChats((prev) => prev.filter((c) => c.id !== chatId));
       if (activeChatId === chatId && startNewChat) startNewChat();
     } catch (err) {
       console.error('Failed to delete chat', err);
