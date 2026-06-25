@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react'; // यहाँ useEffect ऐड कर दिया है
+import axios from 'axios'; // ڈائریکٹ ہٹ مارنے کے لیے ایکسیوس امپورٹ کیا
 import {
   MenuIcon,
   SearchIcon,
@@ -19,6 +20,7 @@ function groupChatsByDate(chats) {
   const oneDay = 24 * 60 * 60 * 1000;
 
   chats.forEach((chat) => {
+    if (!chat || !chat.updatedAt) return; // پروٹیکشن ایڈ کی تاکہ ان ڈیفائنڈ ڈیٹ کریش نہ کرے
     const updated = new Date(chat.updatedAt);
     const diffDays = Math.floor((now - updated) / oneDay);
 
@@ -40,6 +42,7 @@ export default function Sidebar() {
     activeChatId,
     setActiveChatId,
     creations,
+    setCreations, // کانٹیکسٹ سے اس کو نکالا تاکہ امیجز بھی اپڈیٹ ہوں
     searchQuery,
     setSearchQuery,
     startNewChat,
@@ -48,10 +51,31 @@ export default function Sidebar() {
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
 
+  // ==========================================================================
+  // یہ رہا وہ جادوئی کوڈ جو لائیو سائٹ پر بنا ساکٹ کے ڈیٹا کھینچ کر لائے گا
+  // ==========================================================================
+  useEffect(() => {
+    // 1. چیٹس لوڈ کرنے کے لیے ڈائریکٹ لائیو ہٹ
+    axios.get("https://backend-ivory-nine-55.vercel.app/api/history/chats")
+      .then(res => {
+        if (res.data) setChats(res.data);
+      })
+      .catch(err => console.error("Live chats fetch error:", err));
+
+    // 2. مائی اسٹف کی امیجز لوڈ کرنے کے لیے ڈائریکٹ لائیو ہٹ
+    axios.get("https://backend-ivory-nine-55.vercel.app/api/history/creations")
+      .then(res => {
+        if (res.data && setCreations) setCreations(res.data);
+      })
+      .catch(err => console.error("Live creations fetch error:", err));
+  }, []); // یہ بریکٹ لازمی ہیں تاکہ پیج لوڈ ہوتے ہی صرف ایک بار چلے
+  // ==========================================================================
+
   const filteredChats = useMemo(() => {
-    if (!searchQuery.trim()) return chats;
+    const safeChats = chats || []; // سیفٹی چیک
+    if (!searchQuery.trim()) return safeChats;
     const q = searchQuery.toLowerCase();
-    return chats.filter((c) => c.title.toLowerCase().includes(q));
+    return safeChats.filter((c) => c && c.title && c.title.toLowerCase().includes(q));
   }, [chats, searchQuery]);
 
   const groupedChats = useMemo(() => groupChatsByDate(filteredChats), [filteredChats]);
@@ -73,7 +97,7 @@ export default function Sidebar() {
   };
 
   const handleDownloadImage = (e, item) => {
-    e.stopPropagation(); // don't also trigger the thumbnail's "open chat" click
+    e.stopPropagation(); 
     const link = document.createElement('a');
     link.href = item.url;
     const safeName = (item.prompt || 'novascribe-image').slice(0, 60).replace(/[^a-z0-9]+/gi, '-');
@@ -113,7 +137,6 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Search reveals when menu is open, per spec */}
       <div className={`sidebar__search ${showSearch ? 'sidebar__search--active' : ''}`}>
         <SearchIcon size={16} className="sidebar__search-icon" />
         <input
@@ -131,7 +154,6 @@ export default function Sidebar() {
         <span>New Chat</span>
       </button>
 
-      {/* My Stuff — user creations. Explicitly NO "Gems" section. */}
       <div className="sidebar__section">
         <button
           className="sidebar__section-header"
@@ -139,15 +161,15 @@ export default function Sidebar() {
         >
           <SparkleStackIcon size={16} />
           <span>My Stuff</span>
-          <span className="sidebar__count">{creations.length}</span>
+          <span className="sidebar__count">{(creations || []).length}</span>
         </button>
 
         {myStuffExpanded && (
           <div className="sidebar__my-stuff-grid">
-            {creations.length === 0 && (
+            {(!creations || creations.length === 0) && (
               <p className="sidebar__empty-hint">Images you generate will appear here.</p>
             )}
-            {creations.map((item) => (
+            {creations && creations.map((item) => (
               <div
                 key={item.id}
                 className="sidebar__creation-thumb"
@@ -217,3 +239,4 @@ export default function Sidebar() {
     </aside>
   );
 }
+  
