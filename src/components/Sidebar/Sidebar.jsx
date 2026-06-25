@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   MenuIcon,
   SearchIcon,
@@ -35,7 +34,6 @@ function groupChatsByDate(chats) {
 }
 
 export default function Sidebar() {
-  // ایپ کانٹیکسٹ سے صرف وہی چیزیں نکالیں جو وہاں 100% موجود ہیں تاکہ بلڈ ایرر نہ آئے
   const context = useAppContext();
   const sidebarOpen = context?.sidebarOpen;
   const setSidebarOpen = context?.setSidebarOpen;
@@ -51,16 +49,17 @@ export default function Sidebar() {
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
 
-  // لائیو بیک اینڈ سے ڈیٹا فیچ کرنے کے لیے بالکل سیف اپروچ
+  // کسی تھرڈ پارٹی لائبریری (Axios) کے بغیر سٹریٹ فارورڈ نیٹو فیچ کال
   useEffect(() => {
-    if (!setChats) return;
+    if (!setChats || typeof setChats !== 'function') return;
 
-    // چیٹس لوڈ کرنے کے لیے لائیو ہٹ
-    axios.get("https://backend-ivory-nine-55.vercel.app/api/history/chats")
+    fetch("https://backend-ivory-nine-55.vercel.app/api/history/chats")
       .then(res => {
-        if (res.data && typeof setChats === 'function') {
-          setChats(res.data);
-        }
+        if (res.ok) return res.json();
+        throw new Error('Network response was not ok');
+      })
+      .then(data => {
+        if (data) setChats(data);
       })
       .catch(err => console.error("Live chats fetch error:", err));
   }, [setChats]); 
