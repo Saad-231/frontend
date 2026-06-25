@@ -48,15 +48,10 @@ export default function Sidebar() {
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
 
-  // لائیو مانیٹرنگ اور ڈیبگنگ لاجک
   useEffect(() => {
     async function loadSecureHistory() {
       try {
         const token = localStorage.getItem('token') || '';
-        
-        // عارضی الرٹ دیکھنے کے لیے کہ ٹوکن جا بھی رہا ہے یا نہیں
-        console.log("Current Token found:", token);
-
         const response = await fetch("https://backend-ivory-nine-55.vercel.app/api/history/chats", {
           headers: {
             'Content-Type': 'application/json',
@@ -64,27 +59,15 @@ export default function Sidebar() {
           }
         });
 
-        if (!response.ok) {
-          alert(`Backend Error Status: ${response.status}`);
-          return;
+        if (response.ok) {
+          const result = await response.json();
+          // ڈیٹا کو چیک کریں: اگر براہ راست ارے ہے تو وہ، ورنہ اگر {chats: []} ہے تو وہ
+          const chatsData = Array.isArray(result) ? result : (result.chats || []);
+          setLocalChats(chatsData);
+          if (context?.setChats) context.setChats(chatsData);
         }
-
-        const data = await response.json();
-        
-        // اگر ڈیٹا خالی آ رہا ہے تو اسکرین پر الرٹ آئے گا
-        if (data && Array.isArray(data)) {
-          if (data.length === 0) {
-            alert("Backend connected successfully! But Database returned 0 chats (Empty Array).");
-          } else {
-            setLocalChats(data);
-            if (context?.setChats) context.setChats(data);
-          }
-        } else {
-          alert("Response format is not an array!");
-        }
-
       } catch (err) {
-        alert(`Network/CORS Connection Failed: ${err.message}`);
+        console.error("History fetch failed:", err);
       }
     }
 
@@ -214,7 +197,7 @@ export default function Sidebar() {
       <div className="sidebar__history">
         <p className="sidebar__history-label">Chats</p>
         {groupedChats.length === 0 && (
-          <p className="sidebar__empty-hint">No conversations yet — start one!</p>
+          <p className="sidebar__history-empty-hint">No conversations yet — start one!</p>
         )}
         {groupedChats.map(([label, items]) => (
           <div key={label} className="sidebar__history-group">
