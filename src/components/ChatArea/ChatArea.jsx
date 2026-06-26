@@ -4,7 +4,7 @@ import TypingIndicator from './TypingIndicator.jsx';
 import WelcomeScreen from './WelcomeScreen.jsx';
 import InputBar from '../InputBar/InputBar.jsx';
 import MediaOverlay from '../MediaOverlay/MediaOverlay.jsx';
-import { LiveChatIcon } from '../common/Icons.jsx';
+import { LiveChatIcon, MenuIcon } from '../common/Icons.jsx';
 import { useAppContext } from '../../context/AppContext.jsx';
 import { useChatSocket } from '../../hooks/useChatSocket.js';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis.js';
@@ -12,8 +12,17 @@ import * as api from '../../services/api.js';
 import './ChatArea.css';
 
 export default function ChatArea() {
-  const { userId, activeChatId, setActiveChatId, chats, setChats, refreshChats, refreshCreations, setLimitModal } =
-    useAppContext();
+  const {
+    userId,
+    activeChatId,
+    setActiveChatId,
+    chats,
+    setChats,
+    refreshChats,
+    refreshCreations,
+    setLimitModal,
+    setSidebarOpen,
+  } = useAppContext();
 
   const [capturedAttachment, setCapturedAttachment] = useState(null);
   const [overlayMode, setOverlayMode] = useState(null); // 'voice' | 'camera' | 'livechat' | null
@@ -239,6 +248,14 @@ export default function ChatArea() {
   return (
     <main className="chat-area">
       <div className="chat-area__topbar">
+        <button
+          className="chat-area__mobile-menu-btn"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open menu"
+          title="Open menu"
+        >
+          <MenuIcon size={18} />
+        </button>
         <h2 className="chat-area__chat-title">
           {chats.find((c) => c.id === activeChatId)?.title || 'New Chat'}
         </h2>
