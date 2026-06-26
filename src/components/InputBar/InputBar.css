@@ -236,3 +236,41 @@
   color: var(--color-text-muted);
   margin: var(--space-sm) 0 0;
 }
+/* ==========================================================================
+   Mobile responsive overrides (phones / small tablets, <= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .input-bar-wrap {
+    padding: 0 var(--space-sm) var(--space-sm);
+  }
+
+  .input-bar__textarea {
+    font-size: var(--fs-sm);
+    padding: var(--space-sm) 6px 2px;
+  }
+
+  .input-bar__icons-left,
+  .input-bar__icons-right {
+    gap: 2px;
+  }
+
+  .input-bar__icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .input-bar__send-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .input-bar__attachment-name {
+    max-width: 140px;
+  }
+}
+
+@media (max-width: 400px) {
+  .input-bar__textarea {
+    font-size: 13px;
+  }
+}
