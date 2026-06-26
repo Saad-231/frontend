@@ -4,4 +4,30 @@
   width: 100vw;
   background: var(--color-bg);
   overflow: hidden;
+  position: relative;
+}
+
+.app-shell__mobile-backdrop {
+  display: none;
+}
+
+/* ---- Mobile layout (phones/small tablets) ----------------------------
+   Below 768px, the sidebar becomes an overlay drawer instead of sitting
+   permanently beside the chat — it slides in over the content and a
+   tap on the dimmed backdrop closes it again. */
+@media (max-width: 768px) {
+  .app-shell__mobile-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 40;
+    opacity: 0;
+    animation: novascribeMobileBackdropFadeIn 140ms ease-out forwards;
+  }
+}
+
+@keyframes novascribeMobileBackdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
