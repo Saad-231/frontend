@@ -175,3 +175,28 @@
   border-color: rgba(124, 92, 255, 0.4);
   background: rgba(124, 92, 255, 0.08);
 }
+/* ==========================================================================
+   Mobile responsive overrides (phones / small tablets, <= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .message {
+    gap: var(--space-sm);
+  }
+
+  .message__avatar {
+    width: 24px;
+    height: 24px;
+  }
+
+  .message__bubble {
+    max-width: calc(100% - 34px);
+  }
+
+  .message__text {
+    font-size: var(--fs-sm);
+  }
+
+  .message__image-wrap {
+    max-width: min(280px, 70vw);
+  }
+}
