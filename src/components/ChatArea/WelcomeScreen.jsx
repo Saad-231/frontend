@@ -2,10 +2,10 @@ import React from 'react';
 import './WelcomeScreen.css';
 
 const SUGGESTIONS = [
-  { title: 'Draft an email', subtitle: 'asking a client for project feedback' },
-  { title: 'Explain a concept', subtitle: 'like quantum computing, simply' },
-  { title: 'Generate an image', subtitle: 'of a cabin in a snowy forest' },
-  { title: 'Plan my week', subtitle: 'around three big priorities' },
+  { title: 'Draft an email', emoji: '📧', subtitle: 'asking a client for project feedback' },
+  { title: 'Explain a concept', emoji: '💡', subtitle: 'like quantum computing, simply' },
+  { title: 'Generate an image', emoji: '🎨', subtitle: 'of a cabin in a snowy forest' },
+  { title: 'Plan my week', emoji: '🗓️', subtitle: 'around three big priorities' },
 ];
 
 export default function WelcomeScreen({ onPick }) {
@@ -25,7 +25,9 @@ export default function WelcomeScreen({ onPick }) {
             style={{ animationDelay: `${260 + i * 70}ms` }}
             onClick={() => onPick(`${s.title} ${s.subtitle}`)}
           >
-            <span className="welcome__suggestion-title">{s.title}</span>
+            <span className="welcome__suggestion-title">
+              {s.title} <span className="welcome__suggestion-emoji">{s.emoji}</span>
+            </span>
             <span className="welcome__suggestion-subtitle">{s.subtitle}</span>
           </button>
         ))}
