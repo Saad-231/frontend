@@ -12,14 +12,19 @@ export default function WelcomeScreen({ onPick }) {
   return (
     <div className="welcome">
       <img src="/favicon.svg" alt="NovaScribe" className="welcome__mark" />
-      <h1 className="welcome__title">What should we write today?</h1>
+      <h1 className="welcome__title">What should we write today? ✍️</h1>
       <p className="welcome__subtitle">
         Ask anything, generate an image, or talk it out loud — NovaScribe is listening.
       </p>
 
       <div className="welcome__suggestions">
-        {SUGGESTIONS.map((s) => (
-          <button key={s.title} className="welcome__suggestion" onClick={() => onPick(`${s.title} ${s.subtitle}`)}>
+        {SUGGESTIONS.map((s, i) => (
+          <button
+            key={s.title}
+            className="welcome__suggestion"
+            style={{ animationDelay: `${260 + i * 70}ms` }}
+            onClick={() => onPick(`${s.title} ${s.subtitle}`)}
+          >
             <span className="welcome__suggestion-title">{s.title}</span>
             <span className="welcome__suggestion-subtitle">{s.subtitle}</span>
           </button>
