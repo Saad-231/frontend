@@ -39,6 +39,9 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(180px, 220px));
   gap: var(--space-sm);
+  align-self: flex-start;
+  width: 100%;
+  max-width: 460px;
 }
 
 .welcome__suggestion {
@@ -68,6 +71,10 @@
   font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: 2px;
+}
+
+.welcome__suggestion-emoji {
+  margin-left: 2px;
 }
 
 .welcome__suggestion-subtitle {
