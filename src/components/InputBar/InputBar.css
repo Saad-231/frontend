@@ -6,6 +6,12 @@
   flex-shrink: 0;
 }
 
+@media (max-width: 768px) {
+  .input-bar-wrap {
+    padding-bottom: max(var(--space-lg), env(safe-area-inset-bottom, 0px) + 14px);
+  }
+}
+
 .input-bar {
   background: var(--color-surface);
   border: 1px solid var(--color-border-strong);
