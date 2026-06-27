@@ -4,7 +4,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
   padding: var(--space-xl);
   animation: fadeIn var(--dur-slow) var(--ease-out);
 }
@@ -14,6 +13,7 @@
   height: 56px;
   margin-bottom: var(--space-lg);
   display: block;
+  align-self: flex-start;
 }
 
 .welcome__title {
@@ -22,6 +22,8 @@
   font-weight: 600;
   margin: 0 0 var(--space-sm);
   color: var(--color-text-primary);
+  text-align: left;
+  align-self: flex-start;
 }
 
 .welcome__subtitle {
@@ -29,6 +31,8 @@
   color: var(--color-text-secondary);
   margin: 0 0 var(--space-xl);
   max-width: 420px;
+  text-align: left;
+  align-self: flex-start;
 }
 
 .welcome__suggestions {
@@ -44,6 +48,13 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  opacity: 0;
+  animation: novascribeSuggestionFadeIn 420ms ease-out forwards;
+}
+
+@keyframes novascribeSuggestionFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .welcome__suggestion:hover {
