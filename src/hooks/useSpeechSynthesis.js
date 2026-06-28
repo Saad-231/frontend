@@ -43,7 +43,7 @@ export function useSpeechSynthesis() {
         }
       }
 
-      utterance.rate = 1;
+      utterance.rate = 0.92;
       utterance.pitch = 1;
       utterance.onend = () => setSpeakingId(null);
       utterance.onerror = () => setSpeakingId(null);
