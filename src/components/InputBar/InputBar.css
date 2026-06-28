@@ -6,12 +6,6 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .input-bar-wrap {
-    padding-bottom: max(var(--space-lg), env(safe-area-inset-bottom, 0px) + 14px);
-  }
-}
-
 .input-bar {
   background: var(--color-surface);
   border: 1px solid var(--color-border-strong);
@@ -43,9 +37,6 @@
   color: var(--color-text-muted);
 }
 
-/* Attachment preview — shown inside the input bar above the textarea
-   when a file/photo is staged, so the user can actually see what
-   they're about to send (with a thumbnail for images). */
 .input-bar__attachment-preview {
   display: flex;
   align-items: center;
@@ -148,7 +139,6 @@
   color: var(--nova-violet);
 }
 
-/* Send button */
 .input-bar__send-btn {
   display: flex;
   align-items: center;
@@ -171,7 +161,6 @@
   transform: scale(0.96);
 }
 
-/* Stop button (while streaming) */
 .input-bar__stop-btn {
   display: flex;
   align-items: center;
@@ -191,7 +180,6 @@
   color: var(--color-danger);
 }
 
-/* Countdown ring on the gallery/image icon while generating */
 .input-bar__icon-btn--gallery {
   overflow: visible;
 }
@@ -242,12 +230,10 @@
   color: var(--color-text-muted);
   margin: var(--space-sm) 0 0;
 }
-/* ==========================================================================
-   Mobile responsive overrides (phones / small tablets, <= 768px)
-   ========================================================================== */
+
 @media (max-width: 768px) {
   .input-bar-wrap {
-    padding: 0 var(--space-sm) var(--space-sm);
+    padding: 0 var(--space-sm) max(var(--space-sm), env(safe-area-inset-bottom, 0px) + 8px);
   }
 
   .input-bar__textarea {
