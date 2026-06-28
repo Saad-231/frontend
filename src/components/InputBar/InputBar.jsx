@@ -112,7 +112,7 @@ export default function InputBar({
   };
 
   return (
-    <div className="input-bar-wrap">
+    <p className="input-bar__footer-note">NovaScribe can make mistakes. Please double-check responses.</p>
       <div className="input-bar">
         {attachment && (
           <div className="input-bar__attachment-preview">
