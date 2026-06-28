@@ -29,7 +29,8 @@ export function useSpeechSynthesis() {
 
       window.speechSynthesis.cancel();
 
-      const utterance = new window.SpeechSynthesisUtterance(text);
+      const cleanText = text.replace(/#{1,6}\s?/g, '').replace(/\*\*?(.*?)\*\*?/g, '$1');
+const utterance = new window.SpeechSynthesisUtterance(cleanText);
       
       // 🟢 زبان سیٹ کر دی جو باہر سے آئے گی (جیسے 'ur-PK')
       utterance.lang = lang;
