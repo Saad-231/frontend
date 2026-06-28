@@ -8,6 +8,16 @@
   animation: fadeIn var(--dur-slow) var(--ease-out);
 }
 
+@media (min-width: 769px) {
+  .welcome__mark,
+  .welcome__title,
+  .welcome__subtitle,
+  .welcome__suggestions {
+    align-self: center !important;
+    text-align: center !important;
+  }
+}
+
 .welcome__mark {
   width: 56px;
   height: 56px;
