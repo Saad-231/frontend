@@ -77,7 +77,8 @@ export default function ChatArea() {
       // forever even if the browser never fires onend.
       window.speechSynthesis.cancel();
 
-      const utterance = new window.SpeechSynthesisUtterance(message.content);
+      const cleanText = message.content.replace(/#{1,6}\s?/g, '').replace(/\*\*?(.*?)\*\*?/g, '$1');
+const utterance = new window.SpeechSynthesisUtterance(cleanText);
       utterance.rate = 0.85;
       utterance.pitch = 1;
 
