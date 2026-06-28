@@ -112,7 +112,7 @@ export default function InputBar({
   };
 
   return (
-    <p className="input-bar__footer-note">NovaScribe can make mistakes. Please double-check responses.</p>
+    <div className="input-bar-wrap">
       <div className="input-bar">
         {attachment && (
           <div className="input-bar__attachment-preview">
@@ -138,6 +138,7 @@ export default function InputBar({
             >
               <CloseIcon size={13} />
             </button>
+            <p className="input-bar__footer-note">NovaScribe can make mistakes. Please double-check responses.</p>
           </div>
         )}
 
