@@ -78,7 +78,7 @@ export default function ChatArea() {
       window.speechSynthesis.cancel();
 
       const utterance = new window.SpeechSynthesisUtterance(message.content);
-      utterance.rate = 0.92;
+      utterance.rate = 0.85;
       utterance.pitch = 1;
 
       let resumed = false;
