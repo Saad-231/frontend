@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   background: var(--color-bg);
   min-width: 0;
   position: relative;
@@ -66,6 +67,7 @@
 
 .chat-area__scroll {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--space-lg) 0;
   display: flex;
@@ -85,9 +87,6 @@
   margin-bottom: var(--space-md);
 }
 
-/* ==========================================================================
-   Mobile responsive overrides (phones / small tablets, <= 768px)
-   ========================================================================== */
 @media (max-width: 768px) {
   .chat-area__mobile-menu-btn {
     display: flex;
@@ -103,7 +102,7 @@
   }
 
   .chat-area__livechat-btn span {
-    display: none; /* icon-only on small screens, still tappable */
+    display: none;
   }
 
   .chat-area__livechat-btn {
