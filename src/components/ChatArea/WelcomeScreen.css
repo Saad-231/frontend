@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md) var(--space-lg);
+  padding: 8px var(--space-lg);
   overflow: hidden;
   animation: fadeIn var(--dur-slow) var(--ease-out);
 }
@@ -21,16 +21,16 @@
 }
 
 .welcome__mark {
-  width: 44px;
-  height: 44px;
-  margin-bottom: var(--space-sm);
+  width: 40px;
+  height: 40px;
+  margin-bottom: 6px;
   display: block;
   align-self: flex-start;
 }
 
 .welcome__title {
   font-family: var(--font-display);
-  font-size: var(--fs-xl);
+  font-size: var(--fs-lg);
   font-weight: 600;
   margin: 0 0 4px;
   color: var(--color-text-primary);
@@ -39,7 +39,7 @@
 }
 
 .welcome__subtitle {
-  font-size: var(--fs-sm);
+  font-size: 12px;
   color: var(--color-text-secondary);
   margin: 0 0 8px;
   max-width: 420px;
@@ -58,7 +58,7 @@
 
 .welcome__suggestion {
   text-align: left;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: var(--radius-md);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -96,16 +96,7 @@
 }
 
 @media (max-width: 560px) {
-  .welcome__suggestions {
-    grid-template-columns: 1fr;
-    gap: 5px;
-  }
-
-  .welcome__suggestion {
-    padding: 7px 12px;
-  }
-
   .welcome__suggestion-subtitle {
-    display: none;
+    font-size: 10px;
   }
-}
+  }
