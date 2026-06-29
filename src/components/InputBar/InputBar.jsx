@@ -15,17 +15,6 @@ import './InputBar.css';
 
 const IMAGE_GEN_SECONDS = 14;
 
-/**
- * Bottom input bar.
- *
- * Behavior per spec:
- *  - Empty input: shows attachment icons (Document/Link, Gallery, Camera)
- *    on the left, and Mic (voice recording) + Live chat icons on the right.
- *  - Once typing starts: Mic and Live chat both hide — only the Send
- *    button remains on the right.
- *  - While an image is generating, the Gallery/image-generate icon
- *    shows a live countdown ring + remaining seconds.
- */
 export default function InputBar({
   onSendText,
   onGenerateImage,
@@ -64,8 +53,6 @@ export default function InputBar({
   }, [value]);
 
   const isTextEmpty = value.trim().length === 0;
-  // With an attachment staged, the user can send even without typing
-  // anything (e.g. "just send this photo").
   const isEmpty = isTextEmpty && !attachment;
 
   const handleSend = () => {
@@ -93,9 +80,6 @@ export default function InputBar({
   const handleDocClick = () => fileInputRef.current?.click();
 
   const handleGalleryClick = () => {
-    // If the user has already typed something, treat the Gallery icon as
-    // the "generate an image from this prompt" action. If empty, fall
-    // back to its other job: attaching an existing image file.
     if (!isTextEmpty) {
       const prompt = value.trim();
       setValue('');
@@ -125,8 +109,6 @@ export default function InputBar({
             ) : (
               <div className="input-bar__attachment-doc">
                 <PaperclipIcon size={16} />
-                
-            <p className="input-bar__footer-note">NovaScribe can make mistakes. Please double-check responses.</p>
               </div>
             )}
             <span className="input-bar__attachment-name">
@@ -155,7 +137,6 @@ export default function InputBar({
 
         <div className="input-bar__row">
           <div className="input-bar__icons-left">
-            {/* Document / Link */}
             <button
               className="input-bar__icon-btn"
               onClick={handleDocClick}
@@ -172,8 +153,6 @@ export default function InputBar({
               onChange={handleFileChange}
             />
 
-            {/* Gallery / Images — doubles as the image-generation trigger,
-                showing a countdown while generating */}
             <button
               className="input-bar__icon-btn input-bar__icon-btn--gallery"
               onClick={handleGalleryClick}
@@ -210,7 +189,6 @@ export default function InputBar({
               onChange={handleFileChange}
             />
 
-            {/* Camera — activates live webcam overlay */}
             <button
               className="input-bar__icon-btn"
               onClick={onOpenCamera}
@@ -265,6 +243,8 @@ export default function InputBar({
           <ClockIcon size={12} /> Generating your image — about {countdown.secondsLeft}s left
         </p>
       )}
+
+      <p className="input-bar__footer-note">NovaScribe can make mistakes. Please double-check responses.</p>
     </div>
   );
 }
