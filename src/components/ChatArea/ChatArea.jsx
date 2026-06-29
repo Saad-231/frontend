@@ -79,7 +79,7 @@ export default function ChatArea() {
 
       const cleanText = message.content.replace(/#{1,6}\s?/g, '').replace(/\*\*?(.*?)\*\*?/g, '$1');
 const utterance = new window.SpeechSynthesisUtterance(cleanText);
-      utterance.rate = 0.85;
+      utterance.rate = 0.90;
       utterance.pitch = 1;
 
       let resumed = false;
