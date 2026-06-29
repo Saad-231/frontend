@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
   overflow: hidden;
   animation: fadeIn var(--dur-slow) var(--ease-out);
 }
@@ -21,36 +21,36 @@
 }
 
 .welcome__mark {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 6px;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--space-sm);
   display: block;
   align-self: flex-start;
 }
 
 .welcome__title {
   font-family: var(--font-display);
-  font-size: var(--fs-lg);
+  font-size: var(--fs-xl);
   font-weight: 600;
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   color: var(--color-text-primary);
   text-align: left;
   align-self: flex-start;
 }
 
 .welcome__subtitle {
-  font-size: 12px;
+  font-size: var(--fs-sm);
   color: var(--color-text-secondary);
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-md);
   max-width: 420px;
   text-align: left;
   align-self: flex-start;
 }
 
 .welcome__suggestions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(140px, 1fr));
-  gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   align-self: flex-start;
   width: 100%;
   max-width: 460px;
@@ -58,7 +58,7 @@
 
 .welcome__suggestion {
   text-align: left;
-  padding: 8px 10px;
+  padding: 10px 14px;
   border-radius: var(--radius-md);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
