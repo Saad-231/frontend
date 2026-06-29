@@ -125,6 +125,8 @@ export default function InputBar({
             ) : (
               <div className="input-bar__attachment-doc">
                 <PaperclipIcon size={16} />
+                
+            <p className="input-bar__footer-note">NovaScribe can make mistakes. Please double-check responses.</p>
               </div>
             )}
             <span className="input-bar__attachment-name">
@@ -138,7 +140,6 @@ export default function InputBar({
             >
               <CloseIcon size={13} />
             </button>
-            <p className="input-bar__footer-note">NovaScribe can make mistakes. Please double-check responses.</p>
           </div>
         )}
 
