@@ -44,7 +44,7 @@ const utterance = new window.SpeechSynthesisUtterance(cleanText);
         }
       }
 
-      utterance.rate = 0.85;
+      utterance.rate = 0.90;
       utterance.pitch = 1;
       utterance.onend = () => setSpeakingId(null);
       utterance.onerror = () => setSpeakingId(null);
