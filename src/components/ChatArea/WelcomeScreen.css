@@ -41,7 +41,7 @@
 .welcome__subtitle {
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
-  margin: 0 0 var(--space-md);
+  margin: 0 0 8px;
   max-width: 420px;
   text-align: left;
   align-self: flex-start;
@@ -49,8 +49,8 @@
 
 .welcome__suggestions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 220px));
-  gap: var(--space-sm);
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 6px;
   align-self: flex-start;
   width: 100%;
   max-width: 460px;
@@ -58,7 +58,7 @@
 
 .welcome__suggestion {
   text-align: left;
-  padding: var(--space-md);
+  padding: 10px 12px;
   border-radius: var(--radius-md);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -98,5 +98,14 @@
 @media (max-width: 560px) {
   .welcome__suggestions {
     grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .welcome__suggestion {
+    padding: 7px 12px;
+  }
+
+  .welcome__suggestion-subtitle {
+    display: none;
   }
 }
