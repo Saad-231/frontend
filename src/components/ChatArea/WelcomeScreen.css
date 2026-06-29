@@ -1,10 +1,12 @@
 .welcome {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xl);
+  padding: var(--space-md) var(--space-lg);
+  overflow: hidden;
   animation: fadeIn var(--dur-slow) var(--ease-out);
 }
 
@@ -19,27 +21,27 @@
 }
 
 .welcome__mark {
-  width: 56px;
-  height: 56px;
-  margin-bottom: var(--space-lg);
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--space-sm);
   display: block;
   align-self: flex-start;
 }
 
 .welcome__title {
   font-family: var(--font-display);
-  font-size: var(--fs-2xl);
+  font-size: var(--fs-xl);
   font-weight: 600;
-  margin: 0 0 var(--space-sm);
+  margin: 0 0 4px;
   color: var(--color-text-primary);
   text-align: left;
   align-self: flex-start;
 }
 
 .welcome__subtitle {
-  font-size: var(--fs-base);
+  font-size: var(--fs-sm);
   color: var(--color-text-secondary);
-  margin: 0 0 var(--space-xl);
+  margin: 0 0 var(--space-md);
   max-width: 420px;
   text-align: left;
   align-self: flex-start;
