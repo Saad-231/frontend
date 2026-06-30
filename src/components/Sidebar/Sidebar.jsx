@@ -61,7 +61,6 @@ export default function Sidebar() {
 
         if (response.ok) {
           const result = await response.json();
-          // ڈیٹا کو چیک کریں: اگر براہ راست ارے ہے تو وہ، ورنہ اگر {chats: []} ہے تو وہ
           const chatsData = Array.isArray(result) ? result : (result.chats || []);
           setLocalChats(chatsData);
           if (context?.setChats) context.setChats(chatsData);
@@ -96,6 +95,11 @@ export default function Sidebar() {
     }
   };
 
+  const handleNewChatClick = () => {
+    if (startNewChat) startNewChat();
+    if (setSidebarOpen) setSidebarOpen(false);
+  };
+
   const handleDeleteChat = async (e, chatId) => {
     e.stopPropagation();
     try {
@@ -109,7 +113,7 @@ export default function Sidebar() {
   };
 
   const handleDownloadImage = (e, item) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     const link = document.createElement('a');
     link.href = item.url;
     const safeName = (item.prompt || 'novascribe-image').slice(0, 60).replace(/[^a-z0-9]+/gi, '-');
@@ -125,7 +129,7 @@ export default function Sidebar() {
         <button className="sidebar__icon-btn" onClick={handleToggleSidebar} title="Open menu" aria-label="Open menu">
           <MenuIcon />
         </button>
-        <button className="sidebar__icon-btn" onClick={startNewChat} title="New chat" aria-label="New chat">
+        <button className="sidebar__icon-btn" onClick={handleNewChatClick} title="New chat" aria-label="New chat">
           <PlusIcon />
         </button>
       </aside>
@@ -156,7 +160,7 @@ export default function Sidebar() {
         />
       </div>
 
-      <button className="sidebar__new-chat" onClick={startNewChat}>
+      <button className="sidebar__new-chat" onClick={handleNewChatClick}>
         <PlusIcon size={16} />
         <span>New Chat</span>
       </button>
