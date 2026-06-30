@@ -18,6 +18,7 @@ export default function App() {
     return (
       <div className="app-loading">
         <img src="/favicon.svg" alt="NovaScribe" className="app-loading__mark" />
+        <p className="app-loading__text">NovaScribe.AI</p>
       </div>
     );
   }
