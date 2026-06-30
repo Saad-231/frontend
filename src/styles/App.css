@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: flex-start;
   padding-top: 38vh;
-  background: var(--color-bg);
+  background: #ffffff; 
   position: relative;
 }
 
@@ -34,12 +34,12 @@
   animation: novascribeLoadingPulse 1.1s ease-in-out infinite;
 }
 
-.app-loading__text {
+..app-loading__text {
   position: absolute;
   bottom: 40px;
   font-size: 20px;
   font-weight: bold;
-  color: #000000;
+  color: #000000; 
 }
 
 @keyframes novascribeLoadingPulse {
