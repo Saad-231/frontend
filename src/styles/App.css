@@ -28,16 +28,16 @@
 }
 
 .app-loading__mark {
-  width: 100px;  /* Logo ka size increase kar diya */
-  height: 100px; /* Logo ka size increase kar diya */
+  width: 90px;  /* Logo ka size increase kar diya */
+  height: 90px; /* Logo ka size increase kar diya */
   animation: novascribeLoadingPulse 1.1s ease-in-out infinite;
   margin-bottom: 20px; /* Text aur logo ke darmiyan thoda space */
 }
 
 .app-loading__text {
   position: absolute;
-  bottom: 60px; /* Screen ke bottom se thoda upar */
-  font-size: 22px;
+  bottom: 50px; /* Screen ke bottom se thoda upar */
+  font-size: 18px;
   font-weight: 700;
   font-style: italic; /* Screenshot jaisa stylish look */
   color: #000000;
