@@ -22,10 +22,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end; 
+  padding-bottom: 50px;   
   background: #ffffff;
   gap: 16px;
 }
+
 
 .app-loading__mark {
   width: 64px;
