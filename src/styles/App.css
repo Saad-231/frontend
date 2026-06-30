@@ -20,15 +20,26 @@
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg);
+  background: #ffffff;
+  gap: 16px;
 }
 
 .app-loading__mark {
   width: 64px;
   height: 64px;
   animation: novascribeLoadingPulse 1.1s ease-in-out infinite;
+}
+
+.app-loading__text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 22px;
+  color: #1a1a1a;
+  margin: 0;
 }
 
 @keyframes novascribeLoadingPulse {
