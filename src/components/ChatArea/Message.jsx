@@ -74,14 +74,14 @@ export default function Message({ message, onRegenerate }) {
             {message.attachments.map(function (att, idx) {
               return (
   
-    key={idx}
-    href={att.url}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="message__attachment-pill">
-    {att.originalName || 'Attachment'}
-  </a>
-);
+                 <a key={idx}
+                  href={att.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="message__attachment-pill"
+                >
+                  {att.originalName || 'Attachment'}
+                </a>
             })}
           </div>
         )}
