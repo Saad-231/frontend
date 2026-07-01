@@ -69,19 +69,21 @@ export default function Message({ message, onRegenerate }) {
           </div>
         )}
 
-        {message.attachments?.length > 0 && (
+        {message.attachments && message.attachments.length > 0 && (
           <div className="message__attachments">
-            {message.attachments.map((att, idx) => (
-              
-                key={idx}
-                href={att.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="message__attachment-pill"
-              >
-                {att.originalName || 'Attachment'}
-              </a>
-            ))}
+            {message.attachments.map(function (att, idx) {
+              return (
+                
+                  key={idx}
+                  href={att.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="message__attachment-pill"
+                >
+                  {att.originalName || 'Attachment'}
+                </a>
+              );
+            })}
           </div>
         )}
 
