@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { SpeakerIcon, SpeakerOffIcon, DownloadIcon } from '../common/Icons.jsx';
+import { SpeakerIcon, SpeakerOffIcon, DownloadIcon, CopyIcon, CheckIcon, ThumbsUpIcon, ThumbsDownIcon, RegenerateIcon } from '../common/Icons.jsx';
 import { useTypingCursor } from '../../hooks/useTypingCursor.js';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis.js';
 import './Message.css';
 
-export default function Message({ message }) {
+export default function Message({ message, onRegenerate }) {
   const isUser = message.role === 'user';
   const isStreaming = Boolean(message.streaming);
   const cursorVisible = useTypingCursor(isStreaming);
   const { isSupported: ttsSupported, speakingId, speak } = useSpeechSynthesis();
+  const [copied, setCopied] = useState(false);
+  const [feedback, setFeedback] = useState(null);
 
   const isSpeaking = speakingId === message.id;
   const canReadAloud = !isUser && !isStreaming && message.type === 'text' && message.content;
-  
-  // 🟢 چیک کریں کہ ٹیکسٹ اردو یا ہندی (عربی رسم الخط) میں تو نہیں ہے
+  const canUseActions = !isUser && !isStreaming && message.type === 'text' && message.content;
+
   const isUrduOrHindi = /[\u0600-\u06FF\u0900-\u097F]/.test(message.content || '');
 
   const handleDownloadImage = (url, prompt) => {
@@ -25,6 +27,12 @@ export default function Message({ message }) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(message.content || '');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
@@ -64,7 +72,7 @@ export default function Message({ message }) {
         {message.attachments?.length > 0 && (
           <div className="message__attachments">
             {message.attachments.map((att, idx) => (
-              <a
+              
                 key={idx}
                 href={att.url}
                 target="_blank"
@@ -77,17 +85,61 @@ export default function Message({ message }) {
           </div>
         )}
 
-        {canReadAloud && ttsSupported && (
-          <button
-            className={`message__speak-btn ${isSpeaking ? 'message__speak-btn--active' : ''}`}
-            // 🟢 یہاں ہم نے زبان کی کنڈیشن پاس کر دی ہے
-            onClick={() => speak(message.id, message.content, isUrduOrHindi ? 'ur-PK' : 'en-US')}
-            title={isSpeaking ? 'Stop reading aloud' : 'Read this message aloud'}
-            aria-label={isSpeaking ? 'Stop reading aloud' : 'Read message aloud'}
-          >
-            {isSpeaking ? <SpeakerOffIcon size={14} /> : <SpeakerIcon size={14} />}
-            <span>{isSpeaking ? 'Stop' : 'Listen'}</span>
-          </button>
+        {(canReadAloud || canUseActions) && (
+          <div className="message__actions">
+            {canReadAloud && ttsSupported && (
+              <button
+                className={`message__action-btn ${isSpeaking ? 'message__action-btn--active' : ''}`}
+                onClick={() => speak(message.id, message.content, isUrduOrHindi ? 'ur-PK' : 'en-US')}
+                title={isSpeaking ? 'Stop reading aloud' : 'Read this message aloud'}
+                aria-label={isSpeaking ? 'Stop reading aloud' : 'Read message aloud'}
+              >
+                {isSpeaking ? <SpeakerOffIcon size={15} /> : <SpeakerIcon size={15} />}
+              </button>
+            )}
+
+            {canUseActions && (
+              <>
+                <button
+                  className="message__action-btn"
+                  onClick={handleCopy}
+                  title="Copy"
+                  aria-label="Copy response"
+                >
+                  {copied ? <CheckIcon size={15} /> : <CopyIcon size={15} />}
+                </button>
+
+                <button
+                  className={`message__action-btn ${feedback === 'up' ? 'message__action-btn--active' : ''}`}
+                  onClick={() => setFeedback(feedback === 'up' ? null : 'up')}
+                  title="Good response"
+                  aria-label="Like response"
+                >
+                  <ThumbsUpIcon size={15} />
+                </button>
+
+                <button
+                  className={`message__action-btn ${feedback === 'down' ? 'message__action-btn--active' : ''}`}
+                  onClick={() => setFeedback(feedback === 'down' ? null : 'down')}
+                  title="Bad response"
+                  aria-label="Dislike response"
+                >
+                  <ThumbsDownIcon size={15} />
+                </button>
+
+                {onRegenerate && (
+                  <button
+                    className="message__action-btn"
+                    onClick={() => onRegenerate(message)}
+                    title="Regenerate"
+                    aria-label="Regenerate response"
+                  >
+                    <RegenerateIcon size={15} />
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         )}
       </div>
     </div>
