@@ -208,3 +208,31 @@ export const UserIcon = ({ size = 18, ...p }) => (
     <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" />
   </svg>
 );
+export const CopyIcon = ({ size = 16, ...p }) => (
+  <svg {...base(size)} {...p}>
+    <rect x="9" y="9" width="13" height="13" rx="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </svg>
+);
+
+export const ThumbsUpIcon = ({ size = 16, ...p }) => (
+  <svg {...base(size)} {...p}>
+    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z" />
+    <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+  </svg>
+);
+
+export const ThumbsDownIcon = ({ size = 16, ...p }) => (
+  <svg {...base(size)} {...p}>
+    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3z" />
+    <path d="M17 2h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3" />
+  </svg>
+);
+
+export const RegenerateIcon = ({ size = 16, ...p }) => (
+  <svg {...base(size)} {...p}>
+    <polyline points="23 4 23 10 17 10" />
+    <polyline points="1 20 1 14 7 14" />
+    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+  </svg>
+);
