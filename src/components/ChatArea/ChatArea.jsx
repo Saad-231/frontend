@@ -227,7 +227,13 @@ const utterance = new window.SpeechSynthesisUtterance(cleanText);
   const handleSuggestionPick = (text) => {
     sendMessage(text);
   };
-
+  
+const handleRegenerate = (message) => {
+  const idx = allMessages.findIndex((m) => m.id === message.id);
+  const prevUserMsg = [...allMessages.slice(0, idx)].reverse().find((m) => m.role === 'user');
+  if (prevUserMsg) sendMessage(prevUserMsg.content, prevUserMsg.attachments || []);
+};
+  
   const handleLiveChatUtterance = (text) => {
     setLiveChatStatus('thinking');
     sendMessage(text);
@@ -277,7 +283,7 @@ const utterance = new window.SpeechSynthesisUtterance(cleanText);
           <div className="chat-area__messages">
             {loadingHistory && <p className="chat-area__loading-hint">Loading conversation…</p>}
             {allMessages.map((msg) => (
-              <Message key={msg.id} message={msg} />
+              <Message key={msg.id} message={msg} onRegenerate={handleRegenerate} />
             ))}
             {isStreaming && !messages.some((m) => m.streaming) && <TypingIndicator />}
           </div>
