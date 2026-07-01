@@ -73,8 +73,8 @@ export default function Message({ message, onRegenerate }) {
           <div className="message__attachments">
             {message.attachments.map(function (att, idx) {
               return (
-  
-                 <a key={idx}
+                
+                  key={idx}
                   href={att.url}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -82,6 +82,7 @@ export default function Message({ message, onRegenerate }) {
                 >
                   {att.originalName || 'Attachment'}
                 </a>
+              );
             })}
           </div>
         )}
