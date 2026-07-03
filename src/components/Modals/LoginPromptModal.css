@@ -1,0 +1,44 @@
+.login-prompt-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.login-prompt-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  max-width: 340px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+}
+
+.login-prompt-card h2 {
+  font-size: var(--fs-lg);
+  margin: 0 0 var(--space-sm);
+  color: var(--color-text-primary);
+}
+
+.login-prompt-card p {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-lg);
+}
+
+.login-prompt-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: var(--color-text-muted);
+}
+
+.login-prompt-google-btn {
+  display: flex;
+  justify-content: center;
+}
