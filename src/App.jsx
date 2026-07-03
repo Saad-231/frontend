@@ -15,7 +15,7 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-        if (isLoading) {
+  if (isLoading) {
     return (
       <div className="app-loading">
         <img src="/favicon.svg" alt="NovaScribe" className="app-loading__mark" />
@@ -23,9 +23,6 @@ export default function App() {
       </div>
     );
   }
-
-
-
 
   return (
     <div className="app-shell app-shell--entering">
@@ -44,7 +41,10 @@ export default function App() {
       {limitModal && (
         <LimitModal payload={limitModal} onClose={() => setLimitModal(null)} />
       )}
+      
+      {/* GitHub ke mutabiq sahi line ye hai: */}
       <LoginPromptModal />
+      
     </div>
   );
 }
