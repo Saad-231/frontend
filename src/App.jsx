@@ -44,7 +44,7 @@ export default function App() {
       {limitModal && (
         <LimitModal payload={limitModal} onClose={() => setLimitModal(null)} />
       )}
-      <LoginPromptModal/>
+      <LoginPromptModal />
     </div>
   );
 }
