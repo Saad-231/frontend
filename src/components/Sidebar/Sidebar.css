@@ -358,3 +358,43 @@
     transform: translateX(0);
   }
 }
+.sidebar__auth {
+  padding: 0 var(--space-xs) var(--space-md);
+}
+
+.sidebar__profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 6px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.sidebar__profile:hover {
+  background: var(--color-surface-hover);
+}
+
+.sidebar__profile-pic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.sidebar__profile-fallback {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--nova-violet);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.sidebar__profile-name {
+  font-size: var(--fs-sm);
+  color: var(--color-text-primary);
+}
