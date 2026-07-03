@@ -24,6 +24,8 @@ export default function App() {
   }
 
 
+
+
   return (
     <div className="app-shell app-shell--entering">
       <Sidebar />
@@ -43,3 +45,4 @@ export default function App() {
       )}
     </div>
   );
+}
