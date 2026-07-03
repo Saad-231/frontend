@@ -3,6 +3,7 @@ import { getOrCreateUserId } from '../utils/userId';
 import * as api from '../services/api';
 
 const AppContext = createContext(null);
+const GUEST_LIMIT = 3;
 
 export function AppProvider({ children }) {
   const [userId] = useState(getOrCreateUserId);
@@ -16,6 +17,44 @@ export function AppProvider({ children }) {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [limitModal, setLimitModal] = useState(null);
+
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('novascribe_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const isAuthenticated = Boolean(user);
+
+  const [guestUsageCount, setGuestUsageCount] = useState(() => {
+    return parseInt(localStorage.getItem('novascribe_guest_uses') || '0', 10);
+  });
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
+  const login = useCallback((userData, token) => {
+    localStorage.setItem('novascribe_user', JSON.stringify(userData));
+    localStorage.setItem('token', token);
+    setUser(userData);
+    setShowLoginPrompt(false);
+  }, []);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem('novascribe_user');
+    localStorage.removeItem('token');
+    setUser(null);
+  }, []);
+
+  // Returns true if allowed to proceed, false if the guest limit is hit
+  // (and opens the login prompt automatically).
+  const checkGuestAllowance = useCallback(() => {
+    if (isAuthenticated) return true;
+    if (guestUsageCount >= GUEST_LIMIT) {
+      setShowLoginPrompt(true);
+      return false;
+    }
+    const next = guestUsageCount + 1;
+    setGuestUsageCount(next);
+    localStorage.setItem('novascribe_guest_uses', String(next));
+    return true;
+  }, [isAuthenticated, guestUsageCount]);
 
   const refreshChats = useCallback(async () => {
     try {
@@ -60,6 +99,14 @@ export function AppProvider({ children }) {
     limitModal,
     setLimitModal,
     startNewChat,
+    user,
+    isAuthenticated,
+    login,
+    logout,
+    guestUsageCount,
+    checkGuestAllowance,
+    showLoginPrompt,
+    setShowLoginPrompt,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
