@@ -1,4 +1,4 @@
-Import React { useState, useEffect } from 'react';
+Import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar/Sidebar.jsx';
 import ChatArea from './components/ChatArea/ChatArea.jsx';
 import LimitModal from './components/Modals/LimitModal.jsx';
@@ -38,7 +38,9 @@ export default function App() {
           aria-hidden="true"
         />
       )}
+      
       <ChatArea />
+      
       {limitModal && (
         <LimitModal payload={limitModal} onClose={() => setLimitModal(null)} />
       )}
