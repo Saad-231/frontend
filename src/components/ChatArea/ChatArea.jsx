@@ -4,7 +4,7 @@ import TypingIndicator from './TypingIndicator.jsx';
 import WelcomeScreen from './WelcomeScreen.jsx';
 import InputBar from '../InputBar/InputBar.jsx';
 import MediaOverlay from '../MediaOverlay/MediaOverlay.jsx';
-import { LiveChatIcon, MenuIcon } from '../common/Icons.jsx';
+import { MenuIcon } from '../common/Icons.jsx';
 import { useAppContext } from '../../context/AppContext.jsx';
 import { useChatSocket } from '../../hooks/useChatSocket.js';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis.js';
@@ -22,11 +22,12 @@ export default function ChatArea() {
     refreshCreations,
     setLimitModal,
     setSidebarOpen,
+    checkGuestAllowance,
   } = useAppContext();
 
   const [capturedAttachment, setCapturedAttachment] = useState(null);
-  const [overlayMode, setOverlayMode] = useState(null); // 'voice' | 'camera' | 'livechat' | null
-  const [liveChatStatus, setLiveChatStatus] = useState('listening'); // 'listening' | 'thinking' | 'speaking'
+  const [overlayMode, setOverlayMode] = useState(null);
+  const [liveChatStatus, setLiveChatStatus] = useState('listening');
   const [liveChatReplyText, setLiveChatReplyText] = useState('');
   const [isImageGenerating, setIsImageGenerating] = useState(false);
   const [historyMessages, setHistoryMessages] = useState([]);
@@ -37,12 +38,7 @@ export default function ChatArea() {
   const isLiveChatActiveRef = useRef(false);
   const tts = useSpeechSynthesis();
 
-  const handleLimitReached = useCallback(
-    (payload) => {
-      setLimitModal(payload);
-    },
-    [setLimitModal]
-  );
+  const handleLimitReached = useCallback((payload) => setLimitModal(payload), [setLimitModal]);
 
   const handleChatCreated = useCallback(
     (newChatId) => {
@@ -69,17 +65,10 @@ export default function ChatArea() {
         return;
       }
 
-      // Chrome has long-standing bugs where speechSynthesis.speak() can
-      // silently fail, or onend/onstart never fire (especially right
-      // after cancel(), or with certain remote/cloud voices). We guard
-      // against both: cancel first and wait a tick before speaking, and
-      // set a fallback timer so the UI never gets stuck on "speaking"
-      // forever even if the browser never fires onend.
       window.speechSynthesis.cancel();
-
       const cleanText = message.content.replace(/#{1,6}\s?/g, '').replace(/\*\*?(.*?)\*\*?/g, '$1');
-const utterance = new window.SpeechSynthesisUtterance(cleanText);
-      utterance.rate = 0.90;
+      const utterance = new window.SpeechSynthesisUtterance(cleanText);
+      utterance.rate = 0.9;
       utterance.pitch = 1;
 
       let resumed = false;
@@ -92,9 +81,6 @@ const utterance = new window.SpeechSynthesisUtterance(cleanText);
       utterance.onend = resumeListening;
       utterance.onerror = resumeListening;
 
-      // Fallback: estimate a generous speaking duration from text length
-      // (~12 chars/sec is a safe lower bound for spoken English) plus a
-      // buffer, in case the browser never fires onend at all.
       const estimatedMs = Math.max(4000, message.content.length * 90);
       setTimeout(resumeListening, estimatedMs);
 
@@ -118,7 +104,6 @@ const utterance = new window.SpeechSynthesisUtterance(cleanText);
     onAssistantDone: handleAssistantDone,
   });
 
-  // Load history when switching chats
   useEffect(() => {
     let active = true;
     async function load() {
@@ -147,7 +132,6 @@ const utterance = new window.SpeechSynthesisUtterance(cleanText);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeChatId]);
 
-  // Refresh sidebar chat list whenever streaming finishes
   useEffect(() => {
     if (!isStreaming) refreshChats();
   }, [isStreaming, refreshChats]);
@@ -161,10 +145,8 @@ const utterance = new window.SpeechSynthesisUtterance(cleanText);
   }, [allMessages.length, messages]);
 
   const handleSendText = (text) => {
+    if (checkGuestAllowance && !checkGuestAllowance()) return;
     const attachments = capturedAttachment ? [capturedAttachment] : [];
-    // If the user attached a photo/file but didn't type anything, still
-    // send a minimal default message so the request goes through and
-    // the AI has something to respond to alongside the image.
     const finalText = text?.trim() || (attachments.length > 0 ? 'What is in this image?' : '');
     sendMessage(finalText, attachments);
     setCapturedAttachment(null);
@@ -172,6 +154,7 @@ const utterance = new window.SpeechSynthesisUtterance(cleanText);
 
   const handleGenerateImage = async (prompt) => {
     if (!prompt) return;
+    if (checkGuestAllowance && !checkGuestAllowance()) return;
     setIsImageGenerating(true);
     try {
       const result = await api.generateImage(prompt, activeChatId);
@@ -208,33 +191,18 @@ const utterance = new window.SpeechSynthesisUtterance(cleanText);
 
   const handleVoiceResult = (text) => {
     pendingPromptRef.current = text;
-    sendMessage(text);
+    handleSendText(text);
   };
 
   const handlePhotoCapture = (dataUrl) => {
-    // dataUrl looks like "data:image/png;base64,AAAA..." — strip the
-    // prefix so we store raw base64, matching the shape returned by
-    // the file-upload endpoint (both feed the same AI vision path).
     const base64 = dataUrl.split(',')[1] || null;
-    setCapturedAttachment({
-      url: dataUrl,
-      originalName: 'Camera photo',
-      mimeType: 'image/png',
-      base64,
-    });
+    setCapturedAttachment({ url: dataUrl, originalName: 'Camera photo', mimeType: 'image/png', base64 });
   };
 
-  const handleSuggestionPick = (text) => {
-    sendMessage(text);
-  };
-  
-const handleRegenerate = (message) => {
-  const idx = allMessages.findIndex((m) => m.id === message.id);
-  const prevUserMsg = [...allMessages.slice(0, idx)].reverse().find((m) => m.role === 'user');
-  if (prevUserMsg) sendMessage(prevUserMsg.content, prevUserMsg.attachments || []);
-};
-  
+  const handleSuggestionPick = (text) => handleSendText(text);
+
   const handleLiveChatUtterance = (text) => {
+    if (checkGuestAllowance && !checkGuestAllowance()) return;
     setLiveChatStatus('thinking');
     sendMessage(text);
   };
@@ -266,14 +234,6 @@ const handleRegenerate = (message) => {
         <h2 className="chat-area__chat-title">
           {chats.find((c) => c.id === activeChatId)?.title || 'New Chat'}
         </h2>
-        <button
-          className="chat-area__livechat-btn"
-          onClick={handleOpenLiveChat}
-          title="Start a live spoken conversation"
-        >
-          <LiveChatIcon size={15} />
-          <span>Live chat</span>
-        </button>
       </div>
 
       <div className="chat-area__scroll" ref={scrollRef}>
@@ -283,7 +243,7 @@ const handleRegenerate = (message) => {
           <div className="chat-area__messages">
             {loadingHistory && <p className="chat-area__loading-hint">Loading conversation…</p>}
             {allMessages.map((msg) => (
-              <Message key={msg.id} message={msg} onRegenerate={handleRegenerate} />
+              <Message key={msg.id} message={msg} />
             ))}
             {isStreaming && !messages.some((m) => m.streaming) && <TypingIndicator />}
           </div>
