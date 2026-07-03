@@ -38,11 +38,9 @@ export default function App() {
 
       <ChatArea />
 
-      {limitModal && (
+            {limitModal && (
         <LimitModal payload={limitModal} onClose={() => setLimitModal(null)} />
       )}
-      
-      {/* GitHub ke mutabiq sahi line ye hai: */}
       <LoginPromptModal />
       
     </div>
