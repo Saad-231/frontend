@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import {
   MenuIcon,
   SearchIcon,
@@ -12,6 +12,8 @@ import {
 import { useAppContext } from '../../context/AppContext.jsx';
 import * as api from '../../services/api.js';
 import './Sidebar.css';
+
+const GOOGLE_CLIENT_ID = '252649808144-3cpsurc2ckni4vmjos3if02hlfanh7ja.apps.googleusercontent.com';
 
 function groupChatsByDate(chats) {
   const groups = { Today: [], Yesterday: [], 'Previous 7 Days': [], Older: [] };
@@ -43,10 +45,42 @@ export default function Sidebar() {
   const searchQuery = context?.searchQuery || '';
   const setSearchQuery = context?.setSearchQuery;
   const startNewChat = context?.startNewChat;
+  const user = context?.user;
+  const login = context?.login;
+  const logout = context?.logout;
 
   const [localChats, setLocalChats] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
+  const googleBtnRef = useRef(null);
+
+  useEffect(() => {
+    if (user || !window.google || !googleBtnRef.current) return;
+    window.google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: async (response) => {
+        try {
+          const res = await fetch(
+            (import.meta.env.VITE_API_BASE_URL || 'https://backend-ivory-nine-55.vercel.app') + '/api/auth/google',
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ credential: response.credential }),
+            }
+          );
+          const data = await res.json();
+          if (data.token) login(data.user, data.token);
+        } catch (err) {
+          console.error('Google login failed', err);
+        }
+      },
+    });
+    window.google.accounts.id.renderButton(googleBtnRef.current, {
+      theme: 'filled_black',
+      size: 'medium',
+      shape: 'pill',
+    });
+  }, [user, login]);
 
   useEffect(() => {
     async function loadSecureHistory() {
@@ -127,7 +161,7 @@ export default function Sidebar() {
     return (
       <aside className="sidebar sidebar--collapsed">
         <button className="sidebar__icon-btn" onClick={handleToggleSidebar} title="Open menu" aria-label="Open menu">
-          <MenuIcon />
+          <MenuIcon size={24} />
         </button>
         <button className="sidebar__icon-btn" onClick={handleNewChatClick} title="New chat" aria-label="New chat">
           <PlusIcon />
@@ -140,12 +174,27 @@ export default function Sidebar() {
     <aside className="sidebar">
       <div className="sidebar__top">
         <button className="sidebar__icon-btn" onClick={handleToggleSidebar} title="Collapse menu" aria-label="Collapse menu">
-          <MenuIcon />
+          <MenuIcon size={24} />
         </button>
         <div className="sidebar__brand">
           <img src="/favicon.svg" alt="NovaScribe" className="sidebar__brand-mark" />
           <span className="sidebar__brand-name">NovaScribe</span>
         </div>
+      </div>
+
+      <div className="sidebar__auth">
+        {user ? (
+          <div className="sidebar__profile" onClick={logout} title="Click to sign out">
+            {user.picture ? (
+              <img src={user.picture} alt={user.name} className="sidebar__profile-pic" />
+            ) : (
+              <div className="sidebar__profile-fallback">{user.name?.[0] || '?'}</div>
+            )}
+            <span className="sidebar__profile-name">{user.name}</span>
+          </div>
+        ) : (
+          <div ref={googleBtnRef} className="sidebar__google-btn" />
+        )}
       </div>
 
       <div className={`sidebar__search ${showSearch ? 'sidebar__search--active' : ''}`}>
