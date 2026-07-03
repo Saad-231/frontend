@@ -1,4 +1,4 @@
-Import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar/Sidebar.jsx';
 import ChatArea from './components/ChatArea/ChatArea.jsx';
 import LimitModal from './components/Modals/LimitModal.jsx';
@@ -15,7 +15,7 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-        if (isLoading) {
+  if (isLoading) {
     return (
       <div className="app-loading">
         <img src="/favicon.svg" alt="NovaScribe" className="app-loading__mark" />
@@ -24,13 +24,9 @@ export default function App() {
     );
   }
 
-
-
-
   return (
     <div className="app-shell app-shell--entering">
       <Sidebar />
-
       {sidebarOpen && (
         <div
           className="app-shell__mobile-backdrop"
@@ -38,15 +34,14 @@ export default function App() {
           aria-hidden="true"
         />
       )}
-      
+
       <ChatArea />
-      
+
       {limitModal && (
         <LimitModal payload={limitModal} onClose={() => setLimitModal(null)} />
       )}
 
-<LoginPromptModal />
-      
+      <LoginPromptModal />
     </div>
   );
 }
