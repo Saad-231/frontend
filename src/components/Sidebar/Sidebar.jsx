@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   MenuIcon,
   SearchIcon,
@@ -12,8 +12,6 @@ import {
 import { useAppContext } from '../../context/AppContext.jsx';
 import * as api from '../../services/api.js';
 import './Sidebar.css';
-
-const GOOGLE_CLIENT_ID = '252649808144-3cpsurc2ckni4vmjos3if02hlfanh7ja.apps.googleusercontent.com';
 
 function groupChatsByDate(chats) {
   const groups = { Today: [], Yesterday: [], 'Previous 7 Days': [], Older: [] };
@@ -46,41 +44,12 @@ export default function Sidebar() {
   const setSearchQuery = context?.setSearchQuery;
   const startNewChat = context?.startNewChat;
   const user = context?.user;
-  const login = context?.login;
   const logout = context?.logout;
+  const setShowLoginPrompt = context?.setShowLoginPrompt;
 
   const [localChats, setLocalChats] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [myStuffExpanded, setMyStuffExpanded] = useState(false);
-  const googleBtnRef = useRef(null);
-
-  useEffect(() => {
-    if (user || !window.google || !googleBtnRef.current) return;
-    window.google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: async (response) => {
-        try {
-          const res = await fetch(
-            (import.meta.env.VITE_API_BASE_URL || 'https://backend-ivory-nine-55.vercel.app') + '/api/auth/google',
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ credential: response.credential }),
-            }
-          );
-          const data = await res.json();
-          if (data.token) login(data.user, data.token);
-        } catch (err) {
-          console.error('Google login failed', err);
-        }
-      },
-    });
-    window.google.accounts.id.renderButton(googleBtnRef.current, {
-      theme: 'filled_black',
-      size: 'medium',
-      shape: 'pill',
-    });
-  }, [user, login]);
 
   useEffect(() => {
     async function loadSecureHistory() {
@@ -193,7 +162,9 @@ export default function Sidebar() {
             <span className="sidebar__profile-name">{user.name}</span>
           </div>
         ) : (
-          <div ref={googleBtnRef} className="sidebar__google-btn" />
+          <button className="sidebar__signin-btn" onClick={() => setShowLoginPrompt && setShowLoginPrompt(true)}>
+            Sign In
+          </button>
         )}
       </div>
 
