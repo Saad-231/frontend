@@ -17,6 +17,12 @@ export function AppProvider({ children }) {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [limitModal, setLimitModal] = useState(null);
+  const [theme, setThemeState] = useState(() => localStorage.getItem('novascribe_theme') || 'dark');
+
+  const setTheme = useCallback((t) => {
+    localStorage.setItem('novascribe_theme', t);
+    setThemeState(t);
+  }, []);
 
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('novascribe_user');
@@ -42,8 +48,6 @@ export function AppProvider({ children }) {
     setUser(null);
   }, []);
 
-  // Returns true if allowed to proceed, false if the guest limit is hit
-  // (and opens the login prompt automatically).
   const checkGuestAllowance = useCallback(() => {
     if (isAuthenticated) return true;
     if (guestUsageCount >= GUEST_LIMIT) {
@@ -107,6 +111,8 @@ export function AppProvider({ children }) {
     checkGuestAllowance,
     showLoginPrompt,
     setShowLoginPrompt,
+    theme,
+    setTheme,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
