@@ -1,3 +1,4 @@
+
 .chat-area {
   flex: 1;
   display: flex;
@@ -45,24 +46,31 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 50%;
+  flex: 1;
 }
 
-.chat-area__livechat-btn {
+.chat-area__profile-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: var(--fs-xs);
-  padding: 6px 12px;
-  border-radius: var(--radius-full);
-  color: var(--color-text-muted);
+  justify-content: center;
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
   border: 1px solid var(--color-border);
-  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
 }
 
-.chat-area__livechat-btn:hover {
-  color: var(--color-text-primary);
-  border-color: var(--color-border-strong);
-  background: var(--color-accent-soft);
+.chat-area__profile-pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.chat-area__profile-fallback {
+  font-weight: 600;
+  font-size: 13px;
 }
 
 .chat-area__scroll {
@@ -99,14 +107,6 @@
   .chat-area__chat-title {
     max-width: 38%;
     font-size: var(--fs-xs);
-  }
-
-  .chat-area__livechat-btn span {
-    display: none;
-  }
-
-  .chat-area__livechat-btn {
-    padding: 8px;
   }
 
   .chat-area__messages {
