@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAppContext } from '../../context/AppContext.jsx';
 import './WelcomeScreen.css';
 
 const SUGGESTIONS = [
@@ -9,10 +10,15 @@ const SUGGESTIONS = [
 ];
 
 export default function WelcomeScreen({ onPick }) {
+  const { user, isAuthenticated } = useAppContext();
+  const firstName = isAuthenticated && user?.name ? user.name.split(' ')[0] : null;
+
   return (
     <div className="welcome">
       <img src="/favicon.svg" alt="NovaScribe" className="welcome__mark" />
-      <h1 className="welcome__title">What should we write today? ✍️</h1>
+      <h1 className="welcome__title">
+        {firstName ? `Welcome, ${firstName}! ✍️` : 'What should we write today? ✍️'}
+      </h1>
       <p className="welcome__subtitle">
         Ask anything, generate an image, or talk it out loud — NovaScribe is listening.
       </p>
