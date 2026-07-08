@@ -4,7 +4,8 @@ import TypingIndicator from './TypingIndicator.jsx';
 import WelcomeScreen from './WelcomeScreen.jsx';
 import InputBar from '../InputBar/InputBar.jsx';
 import MediaOverlay from '../MediaOverlay/MediaOverlay.jsx';
-import { MenuIcon } from '../common/Icons.jsx';
+import SettingsModal from '../Modals/SettingsModal.jsx';
+import { MenuIcon, UserIcon } from '../common/Icons.jsx';
 import { useAppContext } from '../../context/AppContext.jsx';
 import { useChatSocket } from '../../hooks/useChatSocket.js';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis.js';
@@ -22,6 +23,9 @@ export default function ChatArea() {
     refreshCreations,
     setLimitModal,
     setSidebarOpen,
+    user,
+    isAuthenticated,
+    setShowLoginPrompt,
     checkGuestAllowance,
   } = useAppContext();
 
@@ -32,6 +36,7 @@ export default function ChatArea() {
   const [isImageGenerating, setIsImageGenerating] = useState(false);
   const [historyMessages, setHistoryMessages] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const scrollRef = useRef(null);
   const pendingPromptRef = useRef('');
@@ -234,7 +239,22 @@ export default function ChatArea() {
         <h2 className="chat-area__chat-title">
           {chats.find((c) => c.id === activeChatId)?.title || 'New Chat'}
         </h2>
+        <button
+          className="chat-area__profile-btn"
+          onClick={() => (isAuthenticated ? setShowSettings(true) : setShowLoginPrompt(true))}
+          title={isAuthenticated ? 'Settings' : 'Sign In'}
+        >
+          {isAuthenticated && user?.picture ? (
+            <img src={user.picture} alt={user.name} className="chat-area__profile-pic" />
+          ) : isAuthenticated ? (
+            <span className="chat-area__profile-fallback">{user?.name?.[0] || '?'}</span>
+          ) : (
+            <UserIcon size={18} />
+          )}
+        </button>
       </div>
+
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
 
       <div className="chat-area__scroll" ref={scrollRef}>
         {!activeChatId && allMessages.length === 0 ? (
